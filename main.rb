@@ -21,7 +21,7 @@ spell9 = Speells.new("Stupefy ", 75)
 arraySpells = []
 arraySpells.push(spell1,spell2,spell3,spell4,spell5,spell6,spell7,spell8,spell9)
 
-while TRUE
+while true
     puts "Choose an option:\n1- Predefined battle\n2- Custom battle\n3- exit"
     option = gets.chomp
     case option
