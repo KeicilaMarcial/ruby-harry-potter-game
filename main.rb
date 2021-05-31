@@ -2,9 +2,12 @@ require_relative "spells.rb"
 include SpellsModule
 require_relative "studentWizard.rb"
 include WizardModule
-#name,house,pet,patronus,school_year,life
-wizard1= Wizard.new("Harry Potter","Grifindor","owl","stag","first",100)
-wizard2= Wizard.new("Draco Malfoy","Slytherin","ferret","dragon","first",100)
+require_relative "battle.rb"
+include BattleModule
+
+
+wizard1 = Wizard.new("Harry Potter","Grifindor","owl","stag","first",100)
+wizard2 = Wizard.new("Draco Malfoy","Slytherin","ferret","dragon","first",100)
 
 spell1 = Speells.new("Crucius", 70)
 spell2 = Speells.new("Incendio", 30)
@@ -18,34 +21,46 @@ spell9 = Speells.new("Stupefy ", 75)
 arraySpells = []
 arraySpells.push(spell1,spell2,spell3,spell4,spell5,spell6,spell7,spell8,spell9)
 
-while wizard1.life>0 and wizard2.life >0
-    temp1=[]
-    temp2=[]
+while TRUE
+    puts "Choose an option:\n1- Predefined battle\n2- Custom battle\n3- exit"
+    option = gets.chomp
+    case option
+    when "1"
+        newBattle = Battle.new(wizard1, wizard2, arraySpells)
+        newBattle.figth()
 
-    puts "#{wizard1.name} #{wizard1.life}  | #{wizard2.name} #{wizard2.life}  "
-    temp1 << wizard1.castSpell(arraySpells)
-    puts "Attack wizard1 #{temp1[0].name}, damage #{temp1[0].damage}"
-
-    temp2 << wizard1.castSpell(arraySpells)
-    puts "Attack wizard2 #{temp2[0].name}, damage #{temp2[0].damage}"
-    
-    if(temp1[0].damage>temp2[0].damage)
-        wizard2.life = wizard2.life- (temp1[0].damage-temp2[0].damage)
-        puts "#{wizard1.name}  has just attacked  #{wizard2.name} with #{temp1[0].damage-temp2[0].damage} of damage"
-        puts "life left for   #{wizard2.name}"+ ":  #{wizard2.life}"
-    elsif (temp1[0].damage<temp2[0].damage)
-        wizard1.life =wizard1.life-(temp2[0].damage-temp1[0].damage)
-        puts "#{wizard2.name}  has just attacked  #{wizard1.name} with #{temp2[0].damage-temp1[0].damage} of damage"
-        puts "life left for   #{wizard1.name}"+ ":  #{wizard1.life}"
-    else
-        puts "Tie"
+        #Reset wizard's life
+        wizard1.life = 100
+        wizard2.life = 100 
+    when "2"
+        puts "First wizard:"
+        i = 0
+        customWizard = []
+        while i != 2
+            puts "Name:"
+            name = gets.chomp
+            puts "House:"
+            house = gets.chomp
+            puts "Pet:"
+            pet = gets.chomp
+            puts "Patronus:"
+            patronus = gets.chomp
+            puts "School year:"
+            school_year = gets.chomp
+            customWizard << Wizard.new(name, house, pet, patronus, school_year, 100)
+            if i < 1
+                puts "Second wizard:"
+            end
+            i += 1;
+        end
+        newCustomBattle = Battle.new(customWizard[0], customWizard[1], arraySpells)
+        newCustomBattle.figth()
+    when "3"
+        break
+    else 
+        puts "Invalid option"
     end
-
-    puts "\n"
-end
-
-if(wizard1.life > wizard2.life)
-    puts "The winner is #{wizard1.name}"+ " | Life left : #{wizard1.life}"
-else
-    puts "The winner is #{wizard2.name}"+ " | Life left : #{wizard2.life}"
+    print "Press any key to continue...\n"
+    gets
+    Gem.win_platform? ? (system "cls") : (system "clear")
 end
